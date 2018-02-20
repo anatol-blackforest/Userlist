@@ -10,7 +10,7 @@
 <body>
     {% include 'header.twig' %}
     <h1>{{title}}</h1>
-    {% if admin %}
+    {% if status %}
         <form action="/logout" method="GET">
             <input type="submit" value="Выйти">
         </form>     

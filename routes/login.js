@@ -6,8 +6,11 @@ var MongoClient = require("mongodb").MongoClient
 var url = "mongodb://localhost:27017"
 
 router.get('/', function(req, res, next) {
-    if(req.session.admin){
-        res.render('login', { title: 'Hello, My Lord, Your Great Majesty - Administrator!', admin: true });
+    console.log(req.session)
+    if(req.session.status === "admin"){
+        res.render('login', { title: 'Hello, My Lord, Your Great Majesty - Administrator!', status: "admin" });
+    }else if(req.session.status === "user"){
+        res.render('login', { title: `Hello, ${req.session.userName}`, status: "admin" });
     }else{
         res.render('login', { title: 'Login' });
     }
@@ -25,11 +28,14 @@ router.get('/', function(req, res, next) {
            if(err)client.close()
            collection.findOne({...req.body, password})
             .then(result => {
-                if(result.status === "admin" && !req.session.admin){
-                   req.session.admin = true
-                   res.render('login', { title: `Hello, My Lord, Your Great Majesty - Administrator!`, admin: true });
-                }else{
-                   res.render('login', { title: `Hello, ${result.login}!` });
+                if(result.status === "admin" && !req.session.status){
+                   req.session.status = result.status
+                   res.render('login', { title: `Hello, My Lord, Your Great Majesty - Administrator!`, status: result.status });
+                }else if(result.status === "user" && !req.session.status){
+                   req.session.status = result.status
+                   req.session.userName = result.login
+                   req.session.id = result._id
+                   res.render('login', { title: `Hello, ${result.login}!`, status: result.status }); 
                 }
                 client.close()
             }).catch(() => {

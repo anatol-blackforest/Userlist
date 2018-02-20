@@ -30,7 +30,7 @@ router.get('/:id', function(req, res) {
                     res.redirect("/")
                 }
             })
-          }).catch(()=> {
+          }).catch(() => {
               client.close()
               res.redirect("/")
           })

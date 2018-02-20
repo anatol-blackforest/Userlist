@@ -17,8 +17,8 @@ router.get('/', function(req, res, next) {
               res.render('index', { title: 'Main page' })
               client.close()
           }else{
-              if(req.session.admin){
-                 res.render('index', { title: 'Main page', users, admin: true })
+              if(req.session.status){
+                 res.render('index', { title: 'Main page', users, status: req.session.status, id: req.session.id })
               }else{
                  res.render('index', { title: 'Main page', users })
               }
